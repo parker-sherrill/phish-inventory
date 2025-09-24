@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#FDE2E4" stroke="#E51636" stroke-width="2"/>
+  
+  <!-- Chick-fil-A style "C" -->
+  <path d="M30 25 Q25 25 25 35 L25 45 Q25 50 30 50 Q35 50 35 45 L35 40 Q35 38 33 38 L33 42 Q33 43 32 43 Q31 43 31 42 L31 38 Q31 37 32 37 Q33 37 33 38" fill="#E51636"/>
+  
+  <!-- Stylized chicken head -->
+  <ellipse cx="60" cy="35" rx="8" ry="6" fill="#E51636"/>
+  <circle cx="58" cy="33" r="1.5" fill="white"/>
+  <circle cx="62" cy="33" r="1.5" fill="white"/>
+  <path d="M55 38 Q60 40 65 38" stroke="#E51636" stroke-width="1.5" fill="none"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="70" cy="25" r="3" fill="#E51636"/>
+  <circle cx="75" cy="30" r="2" fill="#E51636"/>
+  <circle cx="72" cy="35" r="2.5" fill="#E51636"/>
+  
+  <!-- Text area background -->
+  <rect x="20" y="60" width="60" height="15" rx="3" fill="#E51636"/>
+  <text x="50" y="70" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">PHISH</text>
+</svg>
+
