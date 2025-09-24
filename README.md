@@ -1,4 +1,4 @@
-# Phish-Fil-A - Phishing Inventory Management System
+# Phish-Fil-A: Phishing Inventory Management System
 
 A full-stack application for tracking, analyzing, and managing phishing reports with Chick-fil-A inspired branding.
 
