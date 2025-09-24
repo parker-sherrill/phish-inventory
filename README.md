@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PhishGuard - Phishing Inventory Management System
 
-## Getting Started
+A full-stack application for tracking, analyzing, and managing phishing reports with Chick-fil-A inspired branding.
 
-First, run the development server:
+## 🏗️ Project Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+phish-inventory/
+├── frontend/                 # Next.js React Frontend (current)
+│   ├── src/
+│   │   ├── app/            # Next.js 13+ App Router
+│   │   ├── components/     # Reusable UI components
+│   │   └── data/           # Mock data
+│   ├── public/             # Static assets
+│   └── package.json
+├── backend/                 # Flask + AWS Backend (coming soon)
+│   ├── api/                # Flask API routes
+│   ├── models/            # Database models
+│   └── requirements.txt
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Current Features (Frontend)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Dashboard**
+- Interactive charts and metrics
+- Monthly report trends
+- Status distribution analysis
+- Real-time statistics
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **Reports Management**
+- Searchable and filterable reports table
+- Detailed report view with modal
+- Status tracking (pending, verified, false positive)
+- Reporter information
 
-## Learn More
+### **Report Submission**
+- Comprehensive form with validation
+- Multiple attack types (email, SMS, social media)
+- Severity levels and descriptions
+- Success notifications with Radix Toast
 
-To learn more about Next.js, take a look at the following resources:
+### **UI/UX Features**
+- 🎨 **Chick-fil-A Branding** with external logo
+- 📱 **Responsive Design** for all devices
+- ♿ **Accessibility** with Radix UI components
+- 🎯 **Modern UI** with Tailwind CSS
+- 🔍 **Advanced Search** and filtering
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### **Frontend**
+- **Next.js 15** with App Router
+- **React 19** with TypeScript
+- **Tailwind CSS** for styling
+- **Radix UI** for accessible components
+- **Recharts** for data visualization
+- **Lucide React** for icons
 
-## Deploy on Vercel
+### **Backend** (Planned)
+- **Flask** Python web framework
+- **AWS** for cloud services
+- **Database** (TBD: PostgreSQL/MongoDB)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Getting Started
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### **Prerequisites**
+- Node.js 18+ 
+- npm or yarn
+
+### **Installation**
+```bash
+# Clone the repository
+git clone https://github.com/parker-sherrill/phish-inventory.git
+cd phish-inventory
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+### **Available Scripts**
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+## 🌐 Deployment
+
+The frontend is ready for deployment on:
+- **Vercel** (recommended for Next.js)
+- **Netlify**
+- **GitHub Pages**
+
+## 📊 Data Structure
+
+### **Report Object**
+```typescript
+interface Report {
+  id: string;
+  url: string;
+  type: 'email' | 'sms' | 'social' | 'website' | 'other';
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  status: 'pending' | 'verified' | 'false_positive';
+  submittedAt: string;
+  reporterName: string;
+  reporterEmail: string;
+}
+```
+
+## 🎨 Design System
+
+### **Color Palette**
+- **Primary**: Chick-fil-A Red (#E51636)
+- **Secondary**: Various pastels for charts
+- **Text**: Gray scale for readability
+
+### **Components**
+- **Layout**: Responsive navigation with logo
+- **Forms**: Validated inputs with error states
+- **Tables**: Sortable, filterable data display
+- **Charts**: Interactive data visualization
+
+## 🔮 Future Enhancements
+
+- [ ] **Backend API** with Flask
+- [ ] **Database Integration** with AWS
+- [ ] **User Authentication**
+- [ ] **Real-time Updates**
+- [ ] **Email Notifications**
+- [ ] **Advanced Analytics**
+- [ ] **API Documentation**
+
+## 📝 License
+
+This project is for educational and demonstration purposes.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+---
+
+**Built with ❤️ and inspired by Chick-fil-A's commitment to excellence**
