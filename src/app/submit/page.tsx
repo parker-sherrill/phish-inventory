@@ -5,28 +5,35 @@ import { useRouter } from 'next/navigation';
 import Layout from '../../components/Layout';
 import ReportForm from '../../components/ReportForm';
 import * as Toast from '@radix-ui/react-toast';
+import { useReports, Report } from '../../context/ReportsContext';
 
 export default function Submit() {
   const router = useRouter();
+  const { addReport } = useReports();   // 👈 use context
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [toast, setToast] = useState<{ open: boolean; success: boolean }>({
+    open: false,
+    success: true,
+  });
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: Omit<Report, 'id' | 'submittedAt' | 'status'>) => {
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('Report submitted:', formData);
-    setIsSubmitting(false);
-    
-    // Show success toast
-    setShowToast(true);
-    
-    // Redirect to reports page after a short delay
-    setTimeout(() => {
-      router.push('/reports');
-    }, 2000);
+    try {
+      // Call backend + update context
+      await addReport(formData);
+
+      setToast({ open: true, success: true });
+
+      // Redirect after short delay
+      setTimeout(() => {
+        router.push('/reports');
+      }, 2000);
+    } catch (err: any) {
+      console.error('Submit failed:', err);
+      setToast({ open: true, success: false });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -39,22 +46,31 @@ export default function Submit() {
               Help protect others by reporting phishing attempts you've encountered.
             </p>
           </div>
-          
+
           <ReportForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </div>
       </Layout>
-      
-      <Toast.Root 
-        open={showToast} 
-        onOpenChange={setShowToast}
-        className="bg-green-600 text-white rounded-lg px-4 py-3 shadow-lg"
+
+      {/* ✅ Toast for success/failure */}
+      <Toast.Root
+        open={toast.open}
+        onOpenChange={(open) => setToast((prev) => ({ ...prev, open }))}
+        className={`rounded-lg px-4 py-3 shadow-lg ${
+          toast.success ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
+        }`}
       >
-        <Toast.Title className="font-semibold">Report submitted successfully!</Toast.Title>
+        <Toast.Title className="font-semibold">
+          {toast.success
+            ? 'Report submitted successfully!'
+            : 'Failed to submit report'}
+        </Toast.Title>
         <Toast.Description className="text-sm opacity-90">
-          Thank you for helping keep users safe. Redirecting to reports...
+          {toast.success
+            ? 'Thank you for helping keep users safe. Redirecting to reports...'
+            : 'Please try again later or contact support.'}
         </Toast.Description>
       </Toast.Root>
-      
+
       <Toast.Viewport className="fixed bottom-4 right-4 flex flex-col gap-2 w-80" />
     </Toast.Provider>
   );

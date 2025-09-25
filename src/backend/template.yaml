@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Phish Inventory API on Lambda + DynamoDB
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 15
+    MemorySize: 512
+
+Resources:
+  PublicRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'GET,POST,DELETE,OPTIONS'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'http://localhost:3000'"
+
+  ReportsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ReportsTable
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ReportsTable
+      Events:
+        ProxyAll:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PublicRestApi
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  ApiBaseUrl:
+    Description: Base URL for the REST API
+    Value: !Sub "https://${PublicRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  TableName:
+    Description: DynamoDB Table Name
+    Value: !Ref ReportsTable

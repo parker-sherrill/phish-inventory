@@ -199,13 +199,8 @@ export default function ReportForm({ onSubmit, isSubmitting }: ReportFormProps) 
           </div>
         </div>
 
-        <div className="flex items-center justify-end space-x-4">
-          <button
-            type="button"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-[color:var(--color-brand-600)] focus:ring-offset-2"
-          >
-            Cancel
-          </button>
+
+      
           <button
             type="submit"
             disabled={isSubmitting}
@@ -223,7 +218,7 @@ export default function ReportForm({ onSubmit, isSubmitting }: ReportFormProps) 
               </>
             )}
           </button>
-        </div>
+    
       </form>
     </div>
   );

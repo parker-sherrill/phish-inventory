@@ -1,26 +1,18 @@
 import { useState } from 'react';
-import { Eye, AlertTriangle, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Eye, AlertTriangle, CheckCircle, XCircle, Clock, Mail, MessageSquare, Users, Trash2 } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Tooltip from '@radix-ui/react-tooltip';
-
-interface Report {
-  id: string;
-  url: string;
-  type: string;
-  description: string;
-  severity: string;
-  status: string;
-  submittedAt: string;
-  reporterName: string;
-  reporterEmail: string;
-}
+import { Report, useReports } from '../context/ReportsContext';
 
 interface ReportsTableProps {
   reports: Report[];
 }
 
 export default function ReportsTable({ reports }: ReportsTableProps) {
+  const { removeReport } = useReports();
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -63,6 +55,19 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
     }
   };
 
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'email':
+        return <Mail className="w-5 h-5 text-blue-600" />;
+      case 'sms':
+        return <MessageSquare className="w-5 h-5 text-green-600" />;
+      case 'social':
+        return <Users className="w-5 h-5 text-purple-600" />;
+      default:
+        return <AlertTriangle className="w-5 h-5 text-gray-600" />;
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -76,6 +81,22 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
   const truncateUrl = (url: string, maxLength: number = 50) => {
     if (url.length <= maxLength) return url;
     return url.substring(0, maxLength) + '...';
+  };
+
+  const handleDelete = async () => {
+    if (!selectedReport) return;
+    
+    setIsDeleting(true);
+    try {
+      await removeReport(selectedReport.id);
+      setSelectedReport(null);
+      setShowDeleteConfirm(false);
+    } catch (error) {
+      console.error('Failed to delete report:', error);
+      // You could add a toast notification here for error feedback
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (reports.length === 0) {
@@ -123,10 +144,8 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span className="text-sm font-medium text-blue-600">
-                          {report.url.charAt(0).toUpperCase()}
-                        </span>
+                      <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+                        {getTypeIcon(report.type)}
                       </div>
                     </div>
                     <div className="ml-4">
@@ -253,10 +272,56 @@ export default function ReportsTable({ reports }: ReportsTableProps) {
               </div>
             )}
             
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-between">
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                {isDeleting ? 'Deleting...' : 'Delete Report'}
+              </button>
+              
               <Dialog.Close className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
                 Close
               </Dialog.Close>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog.Root open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-96 rounded-md bg-white p-6 shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-red-100 rounded-full">
+                <Trash2 className="w-5 h-5 text-red-600" />
+              </div>
+              <Dialog.Title className="text-lg font-medium text-gray-900">Delete Report</Dialog.Title>
+            </div>
+            
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this report? This action cannot be undone.
+            </p>
+            
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
             </div>
           </Dialog.Content>
         </Dialog.Portal>

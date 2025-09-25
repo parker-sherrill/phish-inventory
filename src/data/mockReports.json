@@ -383,5 +383,16 @@
     "submittedAt": "2024-05-20T17:10:00Z",
     "reporterName": "Ahmed Hassan",
     "reporterEmail": "ahmed.hassan@example.com"
+  },
+  {
+    "id": "280ee05c-40c9-431b-9472-08ece8ffa398",
+    "url": "https://fake-login.com",
+    "type": "email",
+    "description": "Suspicious email with fake login",
+    "severity": "high",
+    "status": "pending",
+    "submittedAt": "2025-09-24T20:02:47.555672+00:00",
+    "reporterName": "Alice",
+    "reporterEmail": "alice@example.com"
   }
 ]

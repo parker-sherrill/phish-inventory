@@ -3,26 +3,63 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import MetricsCharts from '../../components/MetricsCharts';
-import mockReports from '../../data/mockReports.json';
+
+import { useReports, Report } from '../../context/ReportsContext';
 
 export default function Dashboard() {
-  const [reports, setReports] = useState(mockReports);
+  const { reports, loading } = useReports();
+
+  if (loading) {
+    if (loading) {
+      return (
+        <Layout>
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-8">
+              <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-64 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+    
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white rounded-lg shadow p-6">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-gray-200 rounded-lg w-10 h-10 animate-pulse"></div>
+                    <div className="ml-4 flex-1">
+                      <div className="h-4 w-24 bg-gray-200 rounded animate-pulse mb-2"></div>
+                      <div className="h-6 w-16 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+    
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="h-64 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-64 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </Layout>
+      );
+    }
+    
+  }
+
 
   // Calculate metrics
   const totalReports = reports.length;
-  const verifiedReports = reports.filter(r => r.status === 'verified').length;
-  const pendingReports = reports.filter(r => r.status === 'pending').length;
-  const falsePositives = reports.filter(r => r.status === 'false_positive').length;
+  const verifiedReports = reports.filter((r: Report) => r.status === 'verified').length;
+  const pendingReports = reports.filter((r: Report) => r.status === 'pending').length;
+  const falsePositives = reports.filter((r: Report) => r.status === 'false_positive').length;
 
   // Calculate reports by month
-  const reportsByMonth = reports.reduce((acc, report) => {
+  const reportsByMonth = reports.reduce((acc: Record<string, number>, report: Report) => {
     const month = new Date(report.submittedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     acc[month] = (acc[month] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
   // Calculate reports by type
-  const reportsByType = reports.reduce((acc, report) => {
+  const reportsByType = reports.reduce((acc: Record<string, number>, report: Report) => {
     acc[report.type] = (acc[report.type] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
