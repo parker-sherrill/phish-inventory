@@ -16,7 +16,7 @@ Resources:
       Cors:
         AllowMethods: "'GET,POST,DELETE,OPTIONS'"
         AllowHeaders: "'*'"
-        AllowOrigin: "'http://localhost:3000'"
+        AllowOrigin: "'https://phish-inventory.vercel.app'"
 
   ReportsTable:
     Type: AWS::DynamoDB::Table
